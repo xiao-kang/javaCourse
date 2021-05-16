@@ -15,16 +15,20 @@ public class HttpClient01 {
     public static void main(String[] args) {
         String url ="http://localhost:8801/";
         try {
-            System.out.println(run(url));
+            System.out.println(httpGet(url));
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
-
-
-    private static String run(String url) throws IOException {
+    /**
+     *  使用http get访问url
+     * @param url
+     * @return 报文体文本
+     * @throws IOException
+     */
+    private static String httpGet(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
