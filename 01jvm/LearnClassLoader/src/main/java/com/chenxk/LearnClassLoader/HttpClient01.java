@@ -15,7 +15,7 @@ public class HttpClient01 {
     public static void main(String[] args) {
         String url ="http://localhost:8801/";
         try {
-            System.out.println(run(url));
+            System.out.println(httpGet(url));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -24,7 +24,7 @@ public class HttpClient01 {
 
 
 
-    private static String run(String url) throws IOException {
+    private static String httpGet(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .build();
