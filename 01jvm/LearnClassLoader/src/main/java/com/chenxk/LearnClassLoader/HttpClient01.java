@@ -22,8 +22,12 @@ public class HttpClient01 {
     }
 
 
-
-
+    /**
+     *  使用http get访问url
+     * @param url
+     * @return 报文体文本
+     * @throws IOException
+     */
     private static String httpGet(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
