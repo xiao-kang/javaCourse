@@ -41,6 +41,7 @@ public class OkeyHttpOuBoundHandler  {
     HttpEndpointRouter router = new RandomHttpEndpointRouter();
 
     public OkeyHttpOuBoundHandler(List<String> backends) {
+        System.out.println("OkeyHttpOuBoundHandler");
 
         this.backendUrls = backends.stream().map(this::formatUrl).collect(Collectors.toList());
 
@@ -71,7 +72,6 @@ public class OkeyHttpOuBoundHandler  {
                 .pingInterval(5, TimeUnit.SECONDS)
                 .readTimeout(60, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
-
                 .build();
 
     }
@@ -81,6 +81,7 @@ public class OkeyHttpOuBoundHandler  {
     }
 
     public void handle(final FullHttpRequest fullRequest, final ChannelHandlerContext ctx, HttpRequestFilter filter) {
+        System.out.println("handle");
         String backendUrl = router.route(this.backendUrls);
         final String url = backendUrl + fullRequest.uri();
         filter.filter(fullRequest, ctx);
@@ -114,6 +115,7 @@ public class OkeyHttpOuBoundHandler  {
                 }
             }
         });
+
 
 
     }
