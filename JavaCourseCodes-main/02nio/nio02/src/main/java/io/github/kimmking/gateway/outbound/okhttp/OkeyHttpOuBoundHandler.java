@@ -32,7 +32,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @author chenxiaokang
  * @date 2021/5/23
  */
-public class OkeyHttpOuBoundHandler {
+public class OkeyHttpOuBoundHandler  {
     private okhttp3.OkHttpClient okHttpClient;
     private ExecutorService proxyService;
     private List<String> backendUrls;
@@ -84,6 +84,7 @@ public class OkeyHttpOuBoundHandler {
         String backendUrl = router.route(this.backendUrls);
         final String url = backendUrl + fullRequest.uri();
         filter.filter(fullRequest, ctx);
+//        fetchGet(fullRequest,ctx,url);
         proxyService.submit(()->fetchGet(fullRequest, ctx, url));
     }
 
@@ -103,9 +104,11 @@ public class OkeyHttpOuBoundHandler {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull Response response)  {
                 try {
+                    System.out.println(response.body().byteString());
                     handleResponse(inbound, ctx, response);
+
                 } catch (Exception exception) {
                     exception.printStackTrace();
                 }
