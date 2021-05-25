@@ -32,7 +32,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @date 2021/5/23
  */
 public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
-    private okhttp3.OkHttpClient httpClient;
+    private  OkHttpClient httpclient;
     private ExecutorService proxyService;
     private List<String> backendUrls;
 
@@ -66,21 +66,27 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
 //                .build();
 //        httpclient.start();
 
-//        okHttpClient =new OkHttpClient.Builder()
-//                .addInterceptor(new Interceptor() {
-//                    @NotNull
-//                    @Override
-//                    public Response intercept(@NotNull Chain chain) throws IOException {
-//                        return null;
-//                    }
-//                })
-//                .connectTimeout(30, TimeUnit.SECONDS)
-//                .callTimeout(120, TimeUnit.SECONDS)
-//                .pingInterval(5, TimeUnit.SECONDS)
-//                .readTimeout(60, TimeUnit.SECONDS)
-//                .writeTimeout(60, TimeUnit.SECONDS)
-//                .build();
-        httpClient =new OkHttpClient();
+        httpclient =new OkHttpClient.Builder()
+
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .callTimeout(120, TimeUnit.SECONDS)
+                .pingInterval(5, TimeUnit.SECONDS)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(60, TimeUnit.SECONDS)
+                .build();
+//        try {
+//            System.out.println(getClass().getClassLoader());
+//           Class<okhttp3.OkHttpClient> clazz= (Class<OkHttpClient>) getClass().getClassLoader().loadClass("okhttp3.OkHttpClient");
+////            httpClient =new OkHttpClient();
+//            httpclient=clazz.newInstance();
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        }
+
 
     }
 
@@ -103,7 +109,7 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
 //        httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_KEEP_ALIVE);
 //        httpGet.setHeader("mao", inbound.headers().get("mao"));
 
-        httpClient.newCall(new Request.Builder()
+        httpclient.newCall(new Request.Builder()
                         .url(url)
                         .header("User-Agent", "OkHttp Example")
                         .build()).enqueue(new Callback() {
@@ -141,17 +147,17 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
 
 
             byte[] body=endpointResponse.body().bytes();
-//            System.out.println(new String(body));
+            System.out.println(endpointResponse.body().byteString());
 //            System.out.println(body.length);
 
             response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
 
             response.headers().set("Content-Type", "application/json");
 //            response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.getFirstHeader("Content-Length").getValue()));
+            response.headers().setInt("Content-Length",body.length);
 
 
-
-            response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.header("Content-Length")));
+//            response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.header("Content-Length")));
 
             filter.filter(response);
 

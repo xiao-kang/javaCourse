@@ -11,8 +11,6 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.Data;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -31,7 +29,7 @@ public class HttpInboundServer {
     public void run() throws Exception {
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup(16);
+        EventLoopGroup workerGroup = new NioEventLoopGroup(1);
 
         try {
             ServerBootstrap b = new ServerBootstrap();
