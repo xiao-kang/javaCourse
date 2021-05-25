@@ -2,6 +2,7 @@ package io.github.kimmking.gateway.inbound;
 
 import io.github.kimmking.gateway.filter.HeaderHttpRequestFilter;
 import io.github.kimmking.gateway.filter.HttpRequestFilter;
+import io.github.kimmking.gateway.outbound.IHttpOutboundHandler;
 import io.github.kimmking.gateway.outbound.httpclient4.HttpOutboundHandler;
 import io.github.kimmking.gateway.outbound.okhttp.OkeyHttpOuBoundHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -17,14 +18,19 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 
     private static Logger logger = LoggerFactory.getLogger(HttpInboundHandler.class);
     private final List<String> proxyServer;
-    private HttpOutboundHandler handler;
+    private IHttpOutboundHandler handler;
     private HttpRequestFilter filter = new HeaderHttpRequestFilter();
-    private OkeyHttpOuBoundHandler okeyHttpOuBoundHandler;
+
 
     public HttpInboundHandler(List<String> proxyServer) {
         this.proxyServer = proxyServer;
         this.handler = new HttpOutboundHandler(this.proxyServer);
-        this.okeyHttpOuBoundHandler = new OkeyHttpOuBoundHandler(this.proxyServer);
+        try {
+            this.handler = new OkeyHttpOuBoundHandler(this.proxyServer);
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
     }
 
     @Override
@@ -45,7 +51,7 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 //            }
 
             handler.handle(fullRequest, ctx, filter);
-//            okeyHttpOuBoundHandler.handle(fullRequest, ctx, filter);
+//
 
 
         } catch (Exception e) {

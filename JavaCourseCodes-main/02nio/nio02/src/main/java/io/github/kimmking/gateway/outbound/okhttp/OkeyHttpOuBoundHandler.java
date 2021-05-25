@@ -4,6 +4,7 @@ package io.github.kimmking.gateway.outbound.okhttp;
 import io.github.kimmking.gateway.filter.HeaderHttpResponseFilter;
 import io.github.kimmking.gateway.filter.HttpRequestFilter;
 import io.github.kimmking.gateway.filter.HttpResponseFilter;
+import io.github.kimmking.gateway.outbound.IHttpOutboundHandler;
 import io.github.kimmking.gateway.outbound.httpclient4.NamedThreadFactory;
 import io.github.kimmking.gateway.router.HttpEndpointRouter;
 import io.github.kimmking.gateway.router.RandomHttpEndpointRouter;
@@ -32,7 +33,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @author chenxiaokang
  * @date 2021/5/23
  */
-public class OkeyHttpOuBoundHandler  {
+public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
     private okhttp3.OkHttpClient okHttpClient;
     private ExecutorService proxyService;
     private List<String> backendUrls;
@@ -66,13 +67,16 @@ public class OkeyHttpOuBoundHandler  {
 //                .setKeepAliveStrategy((response,context) -> 6000)
 //                .build();
 //        httpclient.start();
-        okHttpClient =new OkHttpClient.Builder()
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .callTimeout(120, TimeUnit.SECONDS)
-                .pingInterval(5, TimeUnit.SECONDS)
-                .readTimeout(60, TimeUnit.SECONDS)
-                .writeTimeout(60, TimeUnit.SECONDS)
-                .build();
+         okHttpClient = new OkHttpClient();
+
+//        okHttpClient =new OkHttpClient();
+//                .Builder()
+//                .connectTimeout(30, TimeUnit.SECONDS)
+//                .callTimeout(120, TimeUnit.SECONDS)
+//                .pingInterval(5, TimeUnit.SECONDS)
+//                .readTimeout(60, TimeUnit.SECONDS)
+//                .writeTimeout(60, TimeUnit.SECONDS)
+//                .build();
 
     }
 
