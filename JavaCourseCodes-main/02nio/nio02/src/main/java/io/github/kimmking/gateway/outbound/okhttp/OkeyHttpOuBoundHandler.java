@@ -16,8 +16,6 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpUtil;
 import okhttp3.*;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.HTTP;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -34,7 +32,7 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
  * @date 2021/5/23
  */
 public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
-    private okhttp3.OkHttpClient okHttpClient;
+    private okhttp3.OkHttpClient httpClient;
     private ExecutorService proxyService;
     private List<String> backendUrls;
 
@@ -67,16 +65,22 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
 //                .setKeepAliveStrategy((response,context) -> 6000)
 //                .build();
 //        httpclient.start();
-         okHttpClient = new OkHttpClient();
 
-//        okHttpClient =new OkHttpClient();
-//                .Builder()
+//        okHttpClient =new OkHttpClient.Builder()
+//                .addInterceptor(new Interceptor() {
+//                    @NotNull
+//                    @Override
+//                    public Response intercept(@NotNull Chain chain) throws IOException {
+//                        return null;
+//                    }
+//                })
 //                .connectTimeout(30, TimeUnit.SECONDS)
 //                .callTimeout(120, TimeUnit.SECONDS)
 //                .pingInterval(5, TimeUnit.SECONDS)
 //                .readTimeout(60, TimeUnit.SECONDS)
 //                .writeTimeout(60, TimeUnit.SECONDS)
 //                .build();
+        httpClient =new OkHttpClient();
 
     }
 
@@ -94,12 +98,12 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
     }
 
     private void fetchGet(final FullHttpRequest inbound, final ChannelHandlerContext ctx, final String url) {
-        final HttpGet httpGet = new HttpGet(url);
-        //httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
-        httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_KEEP_ALIVE);
-        httpGet.setHeader("mao", inbound.headers().get("mao"));
+//        final HttpGet httpGet = new HttpGet(url);
+//        //httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_CLOSE);
+//        httpGet.setHeader(HTTP.CONN_DIRECTIVE, HTTP.CONN_KEEP_ALIVE);
+//        httpGet.setHeader("mao", inbound.headers().get("mao"));
 
-        okHttpClient.newCall(new Request.Builder()
+        httpClient.newCall(new Request.Builder()
                         .url(url)
                         .header("User-Agent", "OkHttp Example")
                         .build()).enqueue(new Callback() {

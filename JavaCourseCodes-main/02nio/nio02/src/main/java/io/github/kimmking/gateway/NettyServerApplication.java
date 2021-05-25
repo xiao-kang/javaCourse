@@ -22,7 +22,9 @@ public class NettyServerApplication {
 
 
         // 这是多个后端url走随机路由的例子
-        String proxyServers = System.getProperty("proxyServers","http://127.0.0.1:8801/,http://127.0.0.1:8802/");
+//        String proxyServers = System.getProperty("proxyServers","http://127.0.0.1:8801/,http://127.0.0.1:8802/");
+        String proxyServers = System.getProperty("proxyServers","https://trade.shanghaitrust.com/,https://trade.shanghaitrust.com/weixinV4/");
+
         int port = Integer.parseInt(proxyPort);
         System.out.println(GATEWAY_NAME + " " + GATEWAY_VERSION +" starting...");
         HttpInboundServer server = new HttpInboundServer(port, Arrays.asList(proxyServers.split(",")));

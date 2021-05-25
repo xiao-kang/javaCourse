@@ -25,7 +25,7 @@ public class GetExample {
 
     public static void main(String[] args) throws IOException {
         GetExample example = new GetExample();
-        String response = example.run("https://trade.shanghaitrust.com/");
+        String response = example.run("https://www.baidu.com/");
         System.out.println(response);
     }
 }
