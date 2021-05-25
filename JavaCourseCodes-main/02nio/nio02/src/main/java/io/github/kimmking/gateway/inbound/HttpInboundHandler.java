@@ -3,7 +3,6 @@ package io.github.kimmking.gateway.inbound;
 import io.github.kimmking.gateway.filter.HeaderHttpRequestFilter;
 import io.github.kimmking.gateway.filter.HttpRequestFilter;
 import io.github.kimmking.gateway.outbound.IHttpOutboundHandler;
-import io.github.kimmking.gateway.outbound.httpclient4.HttpOutboundHandler;
 import io.github.kimmking.gateway.outbound.okhttp.OkeyHttpOuBoundHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -24,7 +23,7 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 
     public HttpInboundHandler(List<String> proxyServer) {
         this.proxyServer = proxyServer;
-        this.handler = new HttpOutboundHandler(this.proxyServer);
+//        this.handler = new HttpOutboundHandler(this.proxyServer);
         try {
             this.handler = new OkeyHttpOuBoundHandler(this.proxyServer);
         }catch (Exception ex){
