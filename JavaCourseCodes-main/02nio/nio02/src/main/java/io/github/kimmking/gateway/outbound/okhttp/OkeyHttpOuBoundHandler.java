@@ -121,7 +121,7 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response)  {
                 try {
-                    System.out.println(response.body().byteString());
+//                    System.out.println(response.body().byteString());
                     handleResponse(inbound, ctx, response);
 
                 } catch (Exception exception) {
@@ -147,12 +147,13 @@ public class OkeyHttpOuBoundHandler implements IHttpOutboundHandler {
 
 
             byte[] body=endpointResponse.body().bytes();
-            System.out.println(endpointResponse.body().byteString());
+            System.out.println(new String(body));
 //            System.out.println(body.length);
 
             response = new DefaultFullHttpResponse(HTTP_1_1, OK, Unpooled.wrappedBuffer(body));
 
-            response.headers().set("Content-Type", "application/json");
+//            response.headers().set("Content-Type", "application/json");
+            response.headers().set("Content-Type", "text/html");
 //            response.headers().setInt("Content-Length", Integer.parseInt(endpointResponse.getFirstHeader("Content-Length").getValue()));
             response.headers().setInt("Content-Length",body.length);
 
