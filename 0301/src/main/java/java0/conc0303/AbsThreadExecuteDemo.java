@@ -13,7 +13,7 @@ public abstract class AbsThreadExecuteDemo{
 //        this.childTaskHolder=target;
     }
     protected String prefix(){
-        return "第"+options+"种,";
+        return "Thread is "+Thread.currentThread().getId()+",第"+options+"种方法,";
     }
 
     /**
@@ -38,6 +38,6 @@ public abstract class AbsThreadExecuteDemo{
         System.out.println(prefix()+"子线程stop");
     }
     public void printResult(Integer result){
-        System.out.println(prefix()+" 回到主线程,结果是"+result);
+        System.out.println(prefix()+" 回到主线程,异步执行结果是"+result);
     }
 }
