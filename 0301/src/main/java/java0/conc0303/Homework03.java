@@ -106,9 +106,6 @@ public class Homework03 {
                             printStop();
                             lock.notifyAll();
                         }
-
-
-
                     }
                 });
                 task.start();
@@ -200,6 +197,44 @@ public class Homework03 {
         };
 
         demo5.runChildThread();
+
+        AbsThreadExecuteDemo demo6=new AbsThreadExecuteDemo(6) {
+            Semaphore lock=new Semaphore(1);
+            int sum=0;
+            @Override
+            public void runChildThread() {
+                try {
+                    lock.acquire();
+                    new Thread(new Runnable(){
+                        @Override
+                        public void run() {
+                            printStarted();
+                             sum=sum();
+                            lock.release();
+                            printStop();
+                        }
+                    }).start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+            @Override
+            public void runInMainThread() {
+                try {
+                    lock.acquire();
+                    printResult(sum);
+                    lock.release();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        demo6.runChildThread();
+        demo6.runInMainThread();
 
     }
 
