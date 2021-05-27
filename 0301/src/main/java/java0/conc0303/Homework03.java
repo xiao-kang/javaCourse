@@ -1,6 +1,7 @@
 package java0.conc0303;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
@@ -26,38 +27,135 @@ public class Homework03 {
         System.out.println("异步计算结果为："+result);
          
         System.out.println("使用时间："+ (System.currentTimeMillis()-start) + " ms");
-        
         // 然后退出main线程
-        //第一种Future模式
-        Callable<Integer> call=new Callable<Integer>(){
+
+        AbsThreadExecuteDemo demo1=new AbsThreadExecuteDemo(1) {
+
+            private FutureTask task=new FutureTask(new Callable<Integer>(){
+                @Override
+                public Integer call() throws Exception {
+                    printStarted();
+                    return sum();
+                }
+            });
+            @Override
+            public void runChildThread() {
+                new Thread(this.task).start();
+            }
 
             @Override
-            public Integer call() throws Exception {
-                return fibo(35);
+            public void runInMainThread() {
+                try {
+                    printResult((Integer) this.task.get());
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+
             }
         };
-        FutureTask task=new FutureTask(call);
-        new Thread(task).start();
-        try {
-            System.out.println("第一种");
-            System.out.println(task.get());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        //第二种join
-        Thread thread=new Thread(new Runnable() {
-            @Override
-            public void run() {
-                fibo(36);
-                System.out.println("第二种计算完毕");
-            }
-        });
-        thread.start();
-        thread.join();
-        System.out.println("第二种主线程退出");
+        demo1.runChildThread();
+        demo1.runInMainThread();
 
+        //第二种join
+
+        AbsThreadExecuteDemo demo2=new AbsThreadExecuteDemo(2) {
+            Integer sum=null;
+            @Override
+            public void runChildThread() {
+                Thread task=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        printStarted();
+                        sum=sum();
+                        printStop();
+                    }
+                });
+                task.start();
+                try {
+                    task.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void runInMainThread() {
+                printResult(sum);
+            }
+        };
+
+        demo2.runChildThread();
+        demo2.runInMainThread();
+
+        //todo 没有成功
+       final AbsThreadExecuteDemo demo3=new AbsThreadExecuteDemo(3) {
+            Integer sum=null;
+            Object lock=new Object();
+            @Override
+            public void runChildThread() {
+                Thread task=new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        printStarted();
+                        sum=sum();
+                        printStop();
+                        synchronized(this){
+                            lock.notifyAll();
+                        }
+
+                    }
+                });
+                task.start();
+            }
+
+            @Override
+            public void runInMainThread() {
+                try {
+                    lock.wait();
+                    printResult(sum);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        };
+        demo3.runChildThread();
+        demo3.runInMainThread();
+        AbsThreadExecuteDemo demo4=new AbsThreadExecuteDemo(4) {
+            Integer sum=null;
+            CountDownLatch countDownLatch=new CountDownLatch(1);
+            @Override
+            public void runChildThread() {
+                Thread task=new Thread(new Runnable(){
+                    @Override
+                    public void run() {
+                        printStarted();
+                        sum=sum();
+                        printStop();
+                        countDownLatch.countDown();
+                    }
+                });
+                task.start();
+            }
+
+            @Override
+            public void runInMainThread() {
+                try {
+                    countDownLatch.await();
+                    printResult(sum);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+        };
+        demo4.runChildThread();
+        demo4.runInMainThread();
 
     }
 
