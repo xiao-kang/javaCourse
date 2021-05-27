@@ -90,9 +90,6 @@ public class Homework03 {
         demo2.runInMainThread();
 
 
-
-
-        //todo 没有成功
         AbsThreadExecuteDemo demo3 = new AbsThreadExecuteDemo(3) {
             Integer sum = null;
             Object lock = new Object();
