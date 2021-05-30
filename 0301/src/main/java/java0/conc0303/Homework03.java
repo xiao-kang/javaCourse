@@ -235,6 +235,7 @@ public class Homework03 {
         };
         demo6.runChildThread();
         demo6.runInMainThread();
+        //其他待完善
 
     }
 
