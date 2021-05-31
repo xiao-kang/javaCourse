@@ -287,16 +287,19 @@ public class Homework03 {
 
             @Override
             public void runChildThread() {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        printStarted();
-                        sum = sum();
-                        printStop();
-                        LockSupport.unpark(thread);
-                    }
+                new Thread(()->{
+                    printStarted();
+                    sum = sum();
+                    printStop();
+                    LockSupport.unpark(thread);
                 }).start();
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }).start();
             }
 
 
