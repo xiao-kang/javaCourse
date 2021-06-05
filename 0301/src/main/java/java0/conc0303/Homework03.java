@@ -1,6 +1,10 @@
 package java0.conc0303;
 
 import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 本周作业：（必做）思考有多少种方式，在main函数启动一个新线程或线程池，
@@ -93,6 +97,7 @@ public class Homework03 {
         AbsThreadExecuteDemo demo3 = new AbsThreadExecuteDemo(3) {
             Integer sum = null;
             Object lock = new Object();
+
             @Override
             public void runChildThread() {
                 Thread task = new Thread(new Runnable() {
@@ -100,7 +105,7 @@ public class Homework03 {
                     public void run() {
                         System.out.println(this.getClass());
 
-                        synchronized (lock){
+                        synchronized (lock) {
                             printStarted();
                             sum = sum();
                             printStop();
@@ -115,11 +120,11 @@ public class Homework03 {
             public void runInMainThread() {
                 try {
 
-                    synchronized (lock){
+                    synchronized (lock) {
                         lock.wait();
                         printResult(sum);
                     }
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
 
@@ -161,14 +166,15 @@ public class Homework03 {
         demo4.runChildThread();
         demo4.runInMainThread();
 
-        AbsThreadExecuteDemo demo5=new AbsThreadExecuteDemo(5) {
-            Integer sum=null;
-            CyclicBarrier cyclicBarrier=new CyclicBarrier(1,new Runnable(){
+        AbsThreadExecuteDemo demo5 = new AbsThreadExecuteDemo(5) {
+            Integer sum = null;
+            CyclicBarrier cyclicBarrier = new CyclicBarrier(1, new Runnable() {
                 @Override
                 public void run() {
                     runInMainThread();
                 }
             });
+
             @Override
             public void runInMainThread() {
                 printResult(sum);
@@ -177,11 +183,11 @@ public class Homework03 {
 
             @Override
             public void runChildThread() {
-                new Thread(new Runnable(){
+                new Thread(new Runnable() {
                     @Override
                     public void run() {
                         printStarted();
-                        sum=sum();
+                        sum = sum();
                         printStop();
                         try {
                             cyclicBarrier.await();
@@ -198,18 +204,19 @@ public class Homework03 {
 
         demo5.runChildThread();
 
-        AbsThreadExecuteDemo demo6=new AbsThreadExecuteDemo(6) {
-            Semaphore lock=new Semaphore(1);
-            int sum=0;
+        AbsThreadExecuteDemo demo6 = new AbsThreadExecuteDemo(6) {
+            Semaphore lock = new Semaphore(1);
+            int sum = 0;
+
             @Override
             public void runChildThread() {
                 try {
                     lock.acquire();
-                    new Thread(new Runnable(){
+                    new Thread(new Runnable() {
                         @Override
                         public void run() {
                             printStarted();
-                             sum=sum();
+                            sum = sum();
                             lock.release();
                             printStop();
                         }
@@ -235,8 +242,76 @@ public class Homework03 {
         };
         demo6.runChildThread();
         demo6.runInMainThread();
-        //其他待完善
 
+        AbsThreadExecuteDemo demo7 = new AbsThreadExecuteDemo(7) {
+            Lock lock = new ReentrantLock();
+            Condition condition = lock.newCondition();
+            int sum = 0;
+
+            @Override
+            public void runChildThread() {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lock.lock();
+                        printStarted();
+                        sum = sum();
+                        condition.signalAll();
+                        printStop();
+                        lock.unlock();
+                    }
+                }).start();
+            }
+
+
+            @Override
+            public void runInMainThread() {
+                try {
+                    lock.lock();
+                    condition.await();
+                    printResult(sum);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    lock.unlock();
+                }
+            }
+        };
+        demo7.runChildThread();
+        demo7.runInMainThread();
+
+        AbsThreadExecuteDemo demo8 = new AbsThreadExecuteDemo(8) {
+            Thread thread=Thread.currentThread();
+            int sum = 0;
+
+            @Override
+            public void runChildThread() {
+                new Thread(()->{
+                    printStarted();
+                    sum = sum();
+                    printStop();
+                    LockSupport.unpark(thread);
+                }).start();
+
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }).start();
+            }
+
+
+            @Override
+            public void runInMainThread() {
+                LockSupport.park();
+                printResult(sum);
+
+            }
+        };
+        demo8.runChildThread();
+        demo8.runInMainThread();
     }
 
 
