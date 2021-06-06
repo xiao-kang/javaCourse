@@ -1,0 +1,25 @@
+spring:
+  application:
+#    name: spring-boot-jpa-hikari
+    name: JPA
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: false
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:mysql://192.168.52.125:3306/becker?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: becker
+    password: becker125
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      auto-commit: true
+      minimum-idle: 2
+      idle-timeout: 60000
+      connection-timeout: 30000
+      max-lifetime: 1800000
+      pool-name: DatebookHikariCP
+      maximum-pool-size: 5
