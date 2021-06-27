@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenxk.sharding.demo2.mybatis.mapper.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.chenxk.sharding.demo2.mybatis.domain.Order">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="product_id" jdbcType="BIGINT" property="productId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, product_id, `name`, amount, price
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="com.chenxk.sharding.demo2.mybatis.domain.Order" useGeneratedKeys="true">
+    insert into order (user_id, product_id, `name`, 
+      amount, price)
+    values (#{userId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
+      #{amount,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="com.chenxk.sharding.demo2.mybatis.domain.Order" useGeneratedKeys="true">
+    insert into order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="name != null">
+        `name`,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenxk.sharding.demo2.mybatis.domain.Order">
+    update order
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        `name` = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chenxk.sharding.demo2.mybatis.domain.Order">
+    update order
+    set user_id = #{userId,jdbcType=BIGINT},
+      product_id = #{productId,jdbcType=BIGINT},
+      `name` = #{name,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=INTEGER},
+      price = #{price,jdbcType=DECIMAL}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
