@@ -200,7 +200,7 @@ CREATE TABLE IF NOT EXISTS `demodb`.`order14` (
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `demodb`.`order115` (
+CREATE TABLE IF NOT EXISTS `demodb`.`order15` (
   `id` BIGINT(10) NOT NULL,
   `user_id` BIGINT(10) NULL COMMENT '购买的用户id\n',
   `product_id` BIGINT(10) NULL COMMENT '购买的产品id',
