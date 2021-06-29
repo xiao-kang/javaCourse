@@ -28,12 +28,18 @@ public class Transaction2pcXaRawJdbcExampleApplication {
         String sql = "insert into `order` (user_id, id) VALUES (?, ?);";
 
         System.out.println("First XA Start insert data");
+//        根据规则，这里会插进不同的库表。
+        int start =0;
+        int end=start+16*10;
+        int step=16;
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             conn.setAutoCommit(false);
-            for (int i = 1; i < 11; i++) {
+            for (int i = start; i < end; ) {
                 statement.setLong(1, i);
                 statement.setLong(2, i);
                 statement.executeUpdate();
+                i=i+step;
+                System.out.println("i is "+i);
             }
             conn.commit();
         }
@@ -46,14 +52,22 @@ public class Transaction2pcXaRawJdbcExampleApplication {
         System.out.println("Second XA Start insert data");
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             conn.setAutoCommit(false);
-            for (int i = 1; i < 11; i++) {
+            for (int i = start; i < end+step; ) {
+                statement.setLong(1, i);
+                statement.setLong(2, i);
+                statement.executeUpdate();
+                i=i+step;
+                System.out.println("i is "+i);
+            }
+            /*for (int i = 1; i < 11; i++) {
                 statement.setLong(1, i+5);
                 statement.setLong(2, i+5);
                 statement.executeUpdate();
-            }
+            }*/
             conn.commit();
         } catch (Exception e) {
             System.out.println("Second XA insert failed");
+            e.printStackTrace();
             conn.rollback();
         } finally {
             conn.close();
@@ -77,7 +91,7 @@ public class Transaction2pcXaRawJdbcExampleApplication {
      * @throws IOException
      * @throws SQLException
      */
-    static private DataSource getShardingDatasource() throws IOException, SQLException {
+     private static DataSource getShardingDatasource() throws IOException, SQLException {
         String fileName = "E:\\JavaCourse\\第八周作业\\第六题\\src\\main\\resources\\sharding-databases-tables.yaml";
         File yamlFile = new File(fileName);
         return YamlShardingSphereDataSourceFactory.createDataSource(yamlFile);
