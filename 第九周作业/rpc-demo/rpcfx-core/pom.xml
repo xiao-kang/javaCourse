@@ -6,7 +6,8 @@
         <groupId>com.example.rpcfx</groupId>
         <artifactId>demo-rpcfx</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
+<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+
     </parent>
 
     <groupId>com.example.rpcfx</groupId>
@@ -14,6 +15,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>rpcfx-core</name>
     <description>Demo project for Spring Boot</description>
+
 
     <properties>
         <java.version>1.8</java.version>
@@ -39,10 +41,10 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 
