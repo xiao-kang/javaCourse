@@ -46,8 +46,8 @@ public class Transaction2pcXaRawJdbcExampleApplication {
 
         System.out.println("First XA insert successful");
 
-        // 设置id+5，如果设置XA事务成功，则所有的数据都不会插入
-        // 设置id+5，如果设置XA事务不成功，则id大于10的数据就会插入到数据库
+        // 设置id+step，如果设置XA事务成功，则所有的数据都不会插入
+        // 设置id+step，如果设置XA事务不成功，则id大于10的数据就会插入到数据库
         // 程序运行完毕后，查看数据库，没有id大于10的数据，所以XA设置成功
         System.out.println("Second XA Start insert data");
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
