@@ -60,7 +60,7 @@ public class KafkaUtil {
     public static KafkaProducer<String, String> createProducer(String servers) {
         Properties properties = new Properties();
         properties.put("bootstrap.servers", servers);
-        properties.put("acks", "all");
+        properties.put("acks", "-1");
         properties.put("retries", 0);
         properties.put("batch.size", 16384);
         properties.put("linger.ms", 1);
