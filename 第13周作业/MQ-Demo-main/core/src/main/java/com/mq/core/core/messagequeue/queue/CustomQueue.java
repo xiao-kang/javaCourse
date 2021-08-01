@@ -50,6 +50,7 @@ public class CustomQueue {
     public void put(String message) {
         // TODO
         // 为啥函数锁没有用？
+        // 看锁价什么第地方吧。测试一下。
         synchronized (Constants.WRITE_LOCK) {
             queue.add(message);
             writeIndex += 1;
